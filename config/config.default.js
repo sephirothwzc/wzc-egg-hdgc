@@ -26,6 +26,12 @@ module.exports = appInfo => {
     },
   };
 
+  // wx配置
+  config.weixin = {
+    appid: 'wxb26ad1bcb4f12db6',
+    appsecret: '',
+  };
+
   // 关闭csrf
   config.security = {
     csrf: {
