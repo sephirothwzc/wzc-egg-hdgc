@@ -10,3 +10,6 @@ run/
 .DS_Store
 *.sw*
 *.un~
+# config
+config/config.local.js
+database/config.json
