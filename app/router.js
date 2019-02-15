@@ -10,4 +10,7 @@ module.exports = app => {
 
   // weixin
   router.post('/weixin/jscode2session', controller.weixin.jscode2session);
+
+  // 积分兑换
+  router.post('/change-integral', controller.wxUserIntegral.changeIntegral);
 };

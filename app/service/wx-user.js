@@ -1,5 +1,6 @@
 'use strict';
-// const _ = require('lodash');
+const _ = require('lodash');
+const sequelize = require('sequelize');
 
 const Service = require('egg').Service;
 
@@ -33,16 +34,70 @@ class WxUserService extends Service {
       province: userInfo.province,
     };
     const { ctx } = this;
-    const wxuser = await ctx.model.WxUser.findOne({
+    let wxuser = await ctx.model.WxUser.findOne({
       where: {
         openid: codeSession.openid,
       },
     });
     if (wxuser) {
-      wxuser.update(wxu);
-      return wxuser;
+      await wxuser.update(wxu);
+      const allIntegral = await ctx.model.WxUserIntegral.findAll({
+        attributes: [
+          [ 'integral_type', 'integralType' ],
+          [ sequelize.fn('sum', sequelize.col('integral')), 'integral' ],
+        ],
+        where: {
+          userId: wxuser.id,
+        },
+        group: 'integral_type',
+      });
+      const data = wxuser.get();
+      data.newIs = false;
+      data.integralKDS = {
+        integralType: 'KDS',
+        integral: _.get(
+          _.find(allIntegral, p => {
+            return p.integralType === 'KDS';
+          }),
+          'integral',
+          0
+        ),
+      };
+      data.integralJIC = {
+        integralType: 'JIC',
+        integral: _.get(
+          _.find(allIntegral, p => {
+            return p.integralType === 'JIC';
+          }),
+          'integral',
+          0
+        ),
+      };
+      return data;
     }
-    return ctx.model.WxUser.create(wxu);
+    // 新用户
+    const tempwxuser = await ctx.model.WxUser.create(wxu);
+    wxuser = tempwxuser.get();
+    // 新用户积分发放
+    const kds = ctx.model.WxUserIntegral.create({
+      userId: wxuser.id,
+      integralType: 'KDS',
+      integral: 200,
+      integralTime: new Date(),
+      notes: 'new',
+    });
+    const jic = ctx.model.WxUserIntegral.create({
+      userId: wxuser.id,
+      integralType: 'JIC',
+      integral: 200,
+      integralTime: new Date(),
+      notes: 'new',
+    });
+    const resall = await Promise.all([ kds, jic ]);
+    wxuser.integralKDS = resall[0];
+    wxuser.integralJIC = resall[1];
+    wxuser.newIs = true;
+    return wxuser;
   }
 }
 

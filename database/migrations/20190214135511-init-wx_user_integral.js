@@ -27,18 +27,18 @@ module.exports = {
         integral: INTEGER,
         // 积分产生时间
         integral_time: DATE,
-        // 最后登录时间
+        // 备注
         notes: STRING(500),
         // 备注
-        remark: STRING(200)
+        remark: STRING(200),
       },
       {
-        comment: '微信用户积分表'
+        comment: '微信用户积分表',
       }
     );
   },
 
-  down: async (queryInterface, Sequelize) => {
+  down: async queryInterface => {
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
@@ -47,5 +47,5 @@ module.exports = {
       return queryInterface.dropTable('users');
     */
     await queryInterface.dropTable('wx_user_integral');
-  }
+  },
 };
