@@ -22,6 +22,8 @@ module.exports = app => {
       //
       deletedAt: { type: DATE, field: 'deleted_at' },
       //
+      parentId: { type: BIGINT, field: 'parent_id' },
+      //
       userId: { type: BIGINT, field: 'user_id' },
       //
       integralType: { type: STRING(50), field: 'integral_type' },
@@ -33,6 +35,12 @@ module.exports = app => {
       notes: { type: STRING(500), field: 'notes' },
       //
       remark: { type: STRING(200), field: 'remark' },
+      //
+      sendUserId: { type: BIGINT, field: 'send_user_id' },
+      //
+      sendIntegralType: { type: STRING(50), field: 'send_integral_type' },
+      //
+      sendIntegral: { type: INTEGER, field: 'send_integral' },
     },
     {
       timestamps: true,
@@ -50,12 +58,16 @@ module.exports = app => {
   WxUserIntegralDo.attributes = [
     'id',
     'code',
+    [ 'parent_id', 'parentId' ],
     [ 'user_id', 'userId' ],
     [ 'integral_type', 'integralType' ],
     'integral',
     [ 'integral_time', 'integralTime' ],
     'notes',
     'remark',
+    [ 'send_user_id', 'sendUserId' ],
+    [ 'send_integral_type', 'sendIntegralType' ],
+    [ 'send_integral', 'sendIntegral' ],
   ];
 
   return WxUserIntegralDo;

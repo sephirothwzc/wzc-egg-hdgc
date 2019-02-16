@@ -19,6 +19,7 @@ module.exports = {
         created_at: DATE,
         updated_at: DATE,
         deleted_at: DATE,
+        parent_id: BIGINT,
         // 用户名
         user_id: BIGINT,
         // 积分类型
@@ -31,6 +32,12 @@ module.exports = {
         notes: STRING(500),
         // 备注
         remark: STRING(200),
+        // 兑换人
+        send_user_id: BIGINT,
+        // 兑换类型
+        send_integral_type: STRING(50),
+        // 兑换积分
+        send_integral: INTEGER,
       },
       {
         comment: '微信用户积分表',
